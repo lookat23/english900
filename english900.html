@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resizable Panels</title>
+    <style>
+        .dashed-hr {
+            border: none;
+            border-top: 1px dashed #333; /* 设置虚线边框 */
+            height: 1px;
+            margin: 20px 0; /* 可选：设置上下边距 */
+        }
+    </style>
+</head>
+<body>
+<div>
+  <div>
+    <label for="show_english">显示英文：</label>
+    <input type="checkbox" id="show_english" checked>
+  </div>
+  <div>
+    <label for="show_chinese">显示中文：</label>
+    <input type="checkbox" id="show_chinese" checked>
+  </div>
+</div>
+<div id="data_container">
+    <p>标题</p>
+    <hr class="dashed-hr">
+    <div>
+        <p>
+            1
+        </p>
+        <p>
+            2
+        </p>
+    </div>
+    <hr class="dashed-hr">
+    <div>
+        <p>
+            1
+        </p>
+        <p>
+            2
+        </p>
+    </div>
+    <hr>
+</div>
+
+<script>
+const english900 = {
+  Greetings: {
+    "1": { en: "Hello! / Hi!", cn: "你好！" },
+    "2": { en: "Good morning / afternoon / evening!", cn: "早晨（下午/晚上）好！" },
+    "3": { en: "I'm Kathy King.", cn: "我是凯西·金。" },
+    "4": { en: "Are you Peter Smith?", cn: "你是彼得·史密斯吗？" },
+    "5": { en: "Yes, I am. / No, I'm not.", cn: "是，我是。/ 不，我不是。" },
+    "6": { en: "How are you?", cn: "你好吗？" },
+    "7": { en: "Fine, thanks. And you?", cn: "很好，谢谢，你呢？" },
+    "8": { en: "I'm fine, too.", cn: "我也很好。" },
+    "9": { en: "How is Amy / your wife / your husband?", cn: "爱米好吗？/你妻子好吗？/你丈夫好吗？" },
+    "10": { en: "She is very well, thank you.", cn: "她很好，谢谢。" },
+    "11": { en: "Good night, Jane.", cn: "晚安，简。" },
+    "12": { en: "Good-bye, Mike.", cn: "再见，迈克。" },
+    "13": { en: "See you tomorrow.", cn: "明天见。" },
+    "14": { en: "See you later.", cn: "待会儿见。" },
+    "15": { en: "I have to go now.", cn: "我必须走了。" }
+  },
+  ExpressionInClass: {
+    "16": { en: "May I come in?", cn: "我能进来吗？" },
+    "17": { en: "Come in, please.", cn: "请进。" },
+    "18": { en: "Sit down, please.", cn: "请坐。" },
+    "19": { en: "It's time for class.", cn: "上课时间到了。" },
+    "20": { en: "Open your books and turn to page 20.", cn: "打开书，翻到第20页。" },
+    "21": { en: "I'll call the roll before class.", cn: "课前我要点名。" },
+    "22": { en: "Here!", cn: "到！" },
+    "23": { en: "Has everybody got a sheet?", cn: "每个人都拿到材料了吗？" },
+    "24": { en: "Any different opinion?", cn: "有不同意见吗？" },
+    "25": { en: "Are you with me?", cn: "你们跟上我讲的了吗？" },
+    "26": { en: "Have I made myself clear?", cn: "我讲明白了吗？" },
+    "27": { en: "Could you say it again?", cn: "你能再说一遍吗？" },
+    "28": { en: "Any questions?", cn: "有什么问题吗？" },
+    "29": { en: "That's all for today.", cn: "今天就讲到这里。" },
+    "30": { en: "Please turn in your paper before leaving.", cn: "请在离开前将论文交上。" }
+  },
+  IdentifyingObjects: {
+    "31": { en: "What's this?", cn: "这是什么？" },
+    "32": { en: "It's a pen.", cn: "是支笔。" },
+    "33": { en: "Is this your handbag?", cn: "这是你的手提包吗？" },
+    "34": { en: "No, it isn't. / Yes, it is.", cn: "不，它不是。/是的，它是。" },
+    "35": { en: "Whose pen is this?", cn: "这是谁的笔？" },
+    "36": { en: "It's Kate's.", cn: "是凯特的。" },
+    "37": { en: "Is that a car?", cn: "那是一辆小汽车吗？" },
+    "38": { en: "No, it isn't. It's a bus.", cn: "不，那是一辆公共汽车。" },
+    "39": { en: "What do you call this in English?", cn: "这个用英语怎么说？" },
+    "40": { en: "What is the color of your new book?", cn: "你的新书是什么颜色的？" },
+    "41": { en: "How big is your house?", cn: "你的房子有多大？" },
+    "42": { en: "How long is the street?", cn: "这条街有多长？" },
+    "43": { en: "What's the name of the cat?", cn: "这猫叫什么名字？" },
+    "44": { en: "Where's the company?", cn: "那个公司在哪儿？" },
+    "45": { en: "Which is the right size?", cn: "哪个尺码是对的？" }
+  },
+  AboutBelongings: {
+    "46": { en: "What's this?", cn: "这是什么？" },
+    "47": { en: "It's an air-conditioner.", cn: "这是空调。" },
+    "48": { en: "Is this yours?", cn: "这是你的吗？" },
+    "49": { en: "Yes, it's mine.", cn: "是的，是我的。" },
+    "50": { en: "Where are my glasses?", cn: "我的眼镜在哪儿？" },
+    "51": { en: "Do you know where I've put my glasses?", cn: "你知道我把眼镜搁哪儿了吗？" },
+    "52": { en: "Over there.", cn: "在那边。" },
+    "53": { en: "On the desk.", cn: "在桌上。" },
+    "54": { en: "Is this your pen? I found it under the desk.", cn: "这是你的笔吗？我在桌下捡的。" },
+    "55": { en: "No. Mine is blue.", cn: "不是。我的是蓝的。" },
+    "56": { en: "Which is your bag?", cn: "哪个是你的包？" },
+    "57": { en: "The bigger one.", cn: "大些的那个。" },
+    "58": { en: "The one on your right.", cn: "你右边的那个。" },
+    "59": { en: "Are these books all yours?", cn: "这些书全是你的吗？" },
+    "60": { en: "Some of them are mine.", cn: "一部分是我的。" }
+  },
+    IdentifyingPeople: {
+      "61": { en: "Who are you?", cn: "你是谁？" },
+      "62": { en: "I'm Jim.", cn: "我是吉姆。" },
+      "63": { en: "Who is the guy over there?", cn: "那边那个人是谁？" },
+      "64": { en: "He's Bob.", cn: "他是鲍勃。" },
+      "65": { en: "Is that girl a student?", cn: "那个女孩是学生吗？" },
+      "66": { en: "No, she isn't.", cn: "不，她不是。" },
+      "67": { en: "What do you do?", cn: "你是做什么的？" },
+      "68": { en: "I'm a farmer.", cn: "我是个农民。" },
+      "69": { en: "What does he do?", cn: "他是干什么的？" },
+      "70": { en: "He's a manager.", cn: "他是个经理。" },
+      "71": { en: "She must be a model, isn't she?", cn: "她一定是个模特，不是吗？" },
+      "72": { en: "I really don't know.", cn: "我真不知道。" },
+      "73": { en: "I have no idea about it.", cn: "我一点都不知道。" },
+      "74": { en: "Can she be a driver?", cn: "她可能是个司机吗？" },
+      "75": { en: "Yes, I think so.", cn: "是的，我认为是。" }
+    },
+    AboutIntroduction: {
+      "76": { en: "What's your name?", cn: "你叫什么名字？" },
+      "77": { en: "May I have your name?", cn: "能告诉我你的名字吗？" },
+      "78": { en: "My name is Thomas.", cn: "我叫汤姆斯。" },
+      "79": { en: "Just call me Tom.", cn: "就叫我汤姆吧。" },
+      "80": { en: "What's your family name?", cn: "你姓什么？" },
+      "81": { en: "My family name is Ayneswonth.", cn: "我姓安尼思华斯。" },
+      "82": { en: "How do you spell it?", cn: "怎么拼？" },
+      "83": { en: "Who is the lady in white?", cn: "穿白衣服的那位小姐是谁？" },
+      "84": { en: "Could you introduce me to her?", cn: "你能把我介绍给她吗？" },
+      "85": { en: "Rose, let me introduce my friend to you.", cn: "罗斯，让我介绍一下我的朋友。" },
+      "86": { en: "This is Tom. He's my classmate.", cn: "这是汤姆。我的同学。" },
+      "87": { en: "Nice to meet you.", cn: "很高兴认识你。" },
+      "88": { en: "Nice to meet you, too.", cn: "认识你我也很高兴。" },
+      "89": { en: "Let me introduce myself.", cn: "让我自我介绍一下。" },
+      "90": { en: "How do you do?", cn: "你好！" }
+    },
+    YearMonthAndDay: {
+      "91": { en: "What day is it today?", cn: "今天星期几？" },
+      "92": { en: "It's Monday today.", cn: "今天是星期一。" },
+      "93": { en: "What's the date today?", cn: "今天是几号？" },
+      "94": { en: "It's January the 15th, 1999.", cn: "今天是1999年1月15日。" },
+      "95": { en: "What month is this?", cn: "现在是几月？" },
+      "96": { en: "It's December.", cn: "现在是十二月。" },
+      "97": { en: "What year is this?", cn: "今年是哪一年？" },
+      "98": { en: "It's the year of 1999.", cn: "今年是1999年。" },
+      "99": { en: "What will you do during this weekend?", cn: "这周末你干什么？" },
+      "100": { en: "Does the shop open at 9 am on weekdays?", cn: "这家店平日是早上9点开门吗？" },
+      "101": { en: "It opens at 8 am on weekdays, but at 9 at weekends.", cn: "平日上午8点开，但周末9点开。" },
+      "102": { en: "What will you do the day after next?", cn: "后天你干什么？" },
+      "103": { en: "What did you do the week before last?", cn: "上上星期你干了什么？" },
+      "104": { en: "I'll work for the next 5 days.", cn: "我要工作5天（从明天算起）" },
+      "105": { en: "It's been 5 years since I last saw you.", cn: "我已5年没见你了。" }
+    },
+    TalkingAboutObjects: {
+      "106": { en: "Do you have a computer?", cn: "你有计算机吗？" },
+      "107": { en: "Yes, I do.", cn: "是的，我有。" },
+      "108": { en: "He has that book, doesn't he?", cn: "他有那本书，是吗？" },
+      "109": { en: "No, he doesn't.", cn: "不，他没有。" },
+      "110": { en: "Do you have any brothers or sisters?", cn: "你有兄弟或姐妹吗？" },
+      "111": { en: "No, I'm a single son.", cn: "没有，我是独生子。" },
+      "112": { en: "Does your computer have a modem?", cn: "你的电脑有调制解调器吗？" },
+      "113": { en: "Do you have shampoo here?", cn: "这儿有香波卖吗？" },
+      "114": { en: "What a beautiful garden you have!", cn: "你的花园真漂亮。" },
+      "115": { en: "Any tickets left?", cn: "有剩票吗？" },
+      "116": { en: "Do you have glue? I need some here.", cn: "你有胶水吗？我这里需要一点。" },
+      "117": { en: "I have some left.", cn: "我剩下一些。" },
+      "118": { en: "If you have more, please give me some.", cn: "如果你有多的，请给我。" },
+      "119": { en: "Do you have my pencil?", cn: "你拿了我的铅笔吗？" },
+      "120": { en: "Yes, I have your eraser, too.", cn: "是的，我还拿了你的橡皮。" }
+    },
+    TalkingAboutTime: {
+      "121": { en: "What time is it now?", cn: "现在几点？" },
+      "122": { en: "It's two o'clock.", cn: "现在两点。" },
+      "123": { en: "It's a quarter past five.", cn: "现在是五点一刻。" },
+      "124": { en: "It's ten minutes to four.", cn: "现在差十分四点。" },
+      "125": { en: "It's half past nine.", cn: "现在是九点半。" },
+      "126": { en: "It's one o'clock sharp.", cn: "现在一点整。" },
+      "127": { en: "It's not four o'clock.", cn: "还没到四点呢。" },
+      "128": { en: "My watch says two o'clock.", cn: "我的表是两点钟。" },
+        "129": { en: "My watch is two minutes fast.", cn: "我的表快了两分钟。" },
+        "130": { en: "What's the time by your watch?", cn: "你的表几点了？" },
+        "131": { en: "We must arrive there on time.", cn: "我们必须准时到那儿。" },
+        "132": { en: "There are only two minutes left.", cn: "只剩两分钟了。" },
+        "133": { en: "Can you finish your work ahead of time?", cn: "你能提前完成工作吗？" },
+        "134": { en: "The flight is delayed.", cn: "飞机晚点起飞。" },
+        "135": { en: "The meeting is put off.", cn: "会议延期了。" }
+      },
+      AboutDates: {
+        "136": { en: "What day is today?", cn: "今天星期几？" },
+        "137": { en: "Today is Monday.", cn: "今天星期一。" },
+        "138": { en: "What's the date today?", cn: "今天几号？" },
+        "139": { en: "Today is May 21st.", cn: "今天是五月二十一号。" },
+        "140": { en: "When were you born?", cn: "你什么时候出生的？" },
+        "141": { en: "I was born on September 1st, 1976.", cn: "我出生在1976年9月1日。" },
+        "142": { en: "What time?", cn: "什么时候？" },
+        "143": { en: "You name the time.", cn: "你定时间吧。" },
+        "144": { en: "I'll meet you tomorrow.", cn: "我们明天见面。" },
+        "145": { en: "Do you know the exact date?", cn: "你知道确切日期吗？" },
+        "146": { en: "Please check the date.", cn: "请核实一下日期。" },
+        "147": { en: "What were you doing this time last year?", cn: "去年这时候你在干什么？" },
+        "148": { en: "How long will the sale last?", cn: "折价销售多久？" },
+        "149": { en: "Only three days.", cn: "仅三天。" },
+        "150": { en: "I'll be back in 5 days.", cn: "我五天之后回来。" }
+      },
+      AboutVisits: {
+        "151": { en: "Hello. Can I see Mr. Green?", cn: "你好，我能见格林先生吗？" },
+        "152": { en: "Do you have an appointment?", cn: "你有预约吗？" },
+        "153": { en: "Sorry, I don't.", cn: "对不起，我没有。" },
+        "154": { en: "Yes. At 3 pm.", cn: "是的，约的是下午3点。" },
+        "155": { en: "Sorry, Mr. Green can't see you now.", cn: "对不起，格林先生现在不能见您。" },
+        "156": { en: "He's on the phone.", cn: "他在打电话。" },
+        "157": { en: "Would you wait here for a minute?", cn: "您能在这里等一下吗？" },
+        "158": { en: "Would you like something to drink?", cn: "您想喝点什么吗？" },
+        "159": { en: "Tea, please.", cn: "我喝点茶吧。" },
+        "160": { en: "Mr. Green, Mr. Smith is here.", cn: "格林先生，史密斯先生在这里。" },
+        "161": { en: "You may go in now.", cn: "您可以进去了。" },
+        "162": { en: "Nice to see you, my old friend.", cn: "真高兴见到你，我的老朋友。" },
+        "163": { en: "How have you been these years?", cn: "这些年你怎么样？" },
+        "164": { en: "You've changed little.", cn: "你一点也没变。" },
+        "165": { en: "Do you still remember that Christmas?", cn: "你仍记得那个圣诞节吗？" }
+      },
+      AboutLanguage: {
+        "166": { en: "Do you speak English?", cn: "你会说英语吗？" },
+        "167": { en: "Yes, a little.", cn: "会讲一点。" },
+        "168": { en: "How long have you studied English?", cn: "你学英语多久了？" },
+        "169": { en: "He speaks English fluently.", cn: "他讲英语很流利。" },
+        "170": { en: "Your English is very good.", cn: "你的英语很好。" },
+        "171": { en: "You speak English pretty well.", cn: "你的英语讲的很好。" },
+        "172": { en: "Are you a native speaker of English?", cn: "你的母语是英语吗？" },
+        "173": { en: "My native language is Chinese.", cn: "我的母语是汉语。" },
+        "174": { en: "He speaks with a London accent.", cn: "他带点伦敦口音。" },
+        "175": { en: "He has a strong accent.", cn: "他口音很重。" },
+        "176": { en: "I have some difficulty in expressing myself.", cn: "我表达起来有点困难。" },
+        "177": { en: "I'm always confused with \"s\" and \"th\".", cn: "我常把s和th搞混。" },
+        "178": { en: "Can you write in English?", cn: "你能用英文写文章吗？" },
+        "179": { en: "Your pronunciation is excellent.", cn: "你的发音很好。" },
+        "180": { en: "How can I improve my spoken English?", cn: "我该怎样才能提高口语水平？" }
+      },
+      TalkingAboutActivities: {
+        "181": { en: "What are you doing?", cn: "你在干什么？" },
+        "182": { en: "I'm reading a book.", cn: "我在看书。" },
+        "183": { en: "I'm cooking.", cn: "我在做饭。" },
+        "184": { en: "Are you watching TV now?", cn: "你在看电视吗？" },
+        "185": { en: "Yes, I'm watching Channel 5.", cn: "是的，我在看5频道。" },
+        "186": { en: "No, I'm listening to the radio.", cn: "没有，我在听收音机。" },
+        "187": { en: "Where are you going?", cn: "你去哪儿？" },
+        "188": { en: "I'm going to work.", cn: "我去上班。" },
+        "189": { en: "Who are you writing to?", cn: "你在给谁写信？" },
+        "190": { en: "I'm writing to an old friend.", cn: "给一个老朋友。" },
+          "191": { en: "What will you do this weekend?", cn: "这周末你将干什么？" },
+          "192": { en: "I'll go to a concert.", cn: "我要去听音乐会。" },
+          "193": { en: "I'll go on an outing with some friends.", cn: "我与朋友去郊游。" },
+          "194": { en: "Do you like traveling?", cn: "你喜欢旅游吗？" },
+          "195": { en: "Yes, I like it a great deal/it very much.", cn: "是的，我很喜欢。" }
+        },
+        AboutAge: {
+          "196": { en: "How old are you?", cn: "你多大了？" },
+          "197": { en: "I'm twenty-two (years old).", cn: "我二十二了。" },
+          "198": { en: "Mr. Smith is still in his forties.", cn: "史密斯先生才四十几岁。" },
+          "199": { en: "I'm two years younger than my sister.", cn: "我比我姐小两岁。" },
+          "200": { en: "My elder sister is one year older than her husband.", cn: "我姐比他丈夫大一岁。" },
+          "201": { en: "He's the youngest in the family.", cn: "他是一家中最小的。" },
+          "202": { en: "He looks much younger than he is.", cn: "他看起来比他实际上年轻得多。" },
+          "203": { en: "I came here when I was 20.", cn: "我二十岁来这儿。" },
+          "204": { en: "I started school at the age of 6.", cn: "我六岁开始上学。" },
+          "205": { en: "My father is over 60 years old.", cn: "我父亲已年过六十了。" },
+          "206": { en: "Most of them are less than 30.", cn: "他们中大多数不到30岁。" },
+          "207": { en: "I guess he's about 30.", cn: "我猜他大概30岁。" },
+          "208": { en: "She's going to be 15 next month.", cn: "下个月她就满15了。" },
+          "209": { en: "They'll have a party for their 10th wedding anniversary.", cn: "他们将为结婚十周年开个晚会。" },
+          "210": { en: "He's still a boy after all.", cn: "他毕竟还只是个孩子。" }
+        },
+        TalkingAboutDailyActivities: {
+          "211": { en: "When do you get up everyday?", cn: "每天你几点起床？" },
+          "212": { en: "I usually get up at 8 o'clock.", cn: "我通常8点起床。" },
+          "213": { en: "Where do you have your lunch?", cn: "你在哪儿吃午饭？" },
+          "214": { en: "I have my lunch in a snack bar nearby.", cn: "我在附近一家快餐店吃午饭。" },
+          "215": { en: "What did you have for lunch?", cn: "你中午吃些什么？" },
+          "216": { en: "I had a hamburger and a fried chicken leg.", cn: "我吃一个汉堡包，一个炸鸡腿。" },
+          "217": { en: "What time do you start work?", cn: "你什么时候开始工作？" },
+          "218": { en: "I start work at 8 o'clock.", cn: "我八点开始工作。" },
+          "219": { en: "What do you do at work?", cn: "你上班干些什么？" },
+          "220": { en: "I answer telephones and do some typing.", cn: "我接电话和打字。" },
+          "221": { en: "What time do you finish your work?", cn: "你什么时候下班？" },
+          "222": { en: "At 6 o'clock sharp.", cn: "6点。" },
+          "223": { en: "What do you do in your spare time?", cn: "闲暇时，你干些什么？" },
+          "224": { en: "I like listening to pop music.", cn: "我喜欢听流行音乐。" },
+          "225": { en: "I like playing football.", cn: "我喜欢踢足球。" }
+        },
+        TalkingAboutYesterday: {
+          "226": { en: "When did you get up yesterday morning?", cn: "你昨天早上几点起床？" },
+          "227": { en: "At about seven.", cn: "七点左右。" },
+          "228": { en: "I heard the alarm clock, but I didn't get up until 9.", cn: "我听见闹钟了，但我捱到九点才起。" },
+          "229": { en: "I woke up at seven and got up right away.", cn: "我七点醒了，然后马上起床了。" },
+          "230": { en: "I hurried to my office.", cn: "我匆忙赶到办公室。" },
+          "231": { en: "I had my breakfast on the way.", cn: "我在路上吃的早饭。" },
+          "232": { en: "I was just on time.", cn: "我刚好赶上。" },
+          "233": { en: "I was 10 minutes late.", cn: "我迟到了五分钟。" },
+          "234": { en: "I had lunch with a friend of mine.", cn: "我和我的一个朋友一块吃了午饭。" },
+          "235": { en: "I finished my work at 6 p.m.", cn: "下午6点我下班了。" },
+          "236": { en: "I stayed and did some extra work.", cn: "我留下加了一会儿班。" },
+          "237": { en: "The TV programs were really boring, so I went to bed very early.", cn: "电视节目很无聊，所以我早早睡了。" },
+          "238": { en: "I read a magazine in bed.", cn: "我躺在床上看杂志。" },
+          "239": { en: "I didn't sleep well.", cn: "我没睡好。" },
+          "240": { en: "I slept soundly all night.", cn: "我整夜睡的很熟。" }
+        },
+        TalkingWithFriends: {
+          "241": { en: "Hi, Joe, is it really you?", cn: "乔，你好，真是你吗？" },
+          "242": { en: "Hi, Ann. Nice to see you again.", cn: "安，你好。真高兴再次见到你。" },
+          "243": { en: "It's been a whole year since I last saw you.", cn: "我整整一年没见你了。" },
+          "244": { en: "Yes, but you look as pretty now, as you did then.", cn: "但你看起来还是那么漂亮。"},
+"245": { en: "Oh, thank you. How have you been these days?", cn: "哦，谢谢。这段时间你好吗？" },
+"246": { en: "Not too bad.", cn: "不太糟。" },
+"247": { en: "But you sound so sad.", cn: "但听起来你很悲伤。" },
+"248": { en: "Yes, I lost my pet cat yesterday.", cn: "是啊，昨天我的宠物猫丢了。" },
+"249": { en: "Oh, I'm sorry to hear that.", cn: "听到这消息我很遗憾。" },
+"250": { en: "That's all right.", cn: "没事儿。" },
+"251": { en: "Have you seen Kate lately?", cn: "最近你看见凯特了吗？" },
+"252": { en: "No, I have no contact with her.", cn: "没有。我和她没有一点儿联系。" },
+"253": { en: "I heard she got married last week.", cn: "我听说她上星期结婚了。" },
+"254": { en: "Oh, how nice. Sorry, I've got to go now.", cn: "那真好。对不起，我必须得走了。" },
+"255": { en: "So do I. See you later. Keep in touch.", cn: "我也是，再见。记得联系哦。" }
+},
+TalkingAboutThePast: {
+"256": { en: "I used to take a walk in the early morning.", cn: "我过去常一大早出去散步。" },
+"257": { en: "He used to live in my neighborhood.", cn: "他曾与我是邻居。" },
+"258": { en: "Did you use to go fishing with friends?", cn: "过去你常和朋友钓鱼吗？" },
+"259": { en: "We have known each other for 6 years.", cn: "我们认识有六年了。" },
+"260": { en: "It has been a long time since I last came here.", cn: "自从我上次来这里已经有很长时间了。" },
+"261": { en: "Have you seen Mr. Smith recently?", cn: "最近你见过史密斯先生吗？" },
+"262": { en: "They've been working on this project since last year.", cn: "他们从去年开始一直都在做这个项目。" },
+"263": { en: "I've been watching TV all night.", cn: "我看了一整晚的电视。" },
+"264": { en: "The movie began as soon as we got there.", cn: "我们一到那儿电影就开始了。" },
+"265": { en: "When I arrived at the station, the train had already left.", cn: "我到车站时，火车已经开了。" },
+"266": { en: "The late arrival of the ship had messed up all our plans.", cn: "船到晚了，把我们的计划全打乱了。" },
+"267": { en: "I had thought he knew the time of the meeting.", cn: "我原以为他知道开会时间。" },
+"268": { en: "They had expected me to go with them.", cn: "他们原本希望我和他们一起去。" },
+"269": { en: "That was the third time that I had visited the place.", cn: "那是我第三次参观那地方了。" },
+"270": { en: "After I had finished my paper, I put it in the drawer.", cn: "我写完论文，就把它放在抽屉了。" }
+},
+AskingAboutTheAddress: {
+"271": { en: "Hi, Jack, where do you live now?", cn: "你好，杰克，你现在住哪儿？" },
+"272": { en: "I live at 203 Curzon Street.", cn: "我住在可胜街203号。" },
+"273": { en: "Curzon Street? Isn't Mary living there?", cn: "可胜街？玛丽不是也住那儿吗？" },
+"274": { en: "Yes, she lives just across the street.", cn: "是的，她就住在街对面。" },
+"275": { en: "How long have you stayed there?", cn: "你在那儿住多久了？" },
+"276": { en: "Just a few months.", cn: "才几个月。" },
+"277": { en: "How about Mary? How long has she lived there?", cn: "玛丽怎么样？她在那儿住多久了？" },
+"278": { en: "She's been living there since her birth.", cn: "她生下来就住那儿。" },
+"279": { en: "Will you stay there for long?", cn: "你会在那儿待很长时间吗？" },
+"280": { en: "No, I'll move to Hollywood next month.", cn: "不，我下个月搬到好莱坞去。" },
+"281": { en: "Oh, really? I'm moving there too.", cn: "真的？我也会搬到那儿去。" },
+"282": { en: "Great. Then we can drink beer together.", cn: "棒极了，我们可以一起喝啤酒了。" },
+"283": { en: "Yes, and you may stay there longer.", cn: "对，而且你也许会在那儿住久一些。" },
+"284": { en: "I hope so.", cn: "希望如此。" },
+"285": { en: "I'm sure we'll have a good time.", cn: "我相信我们会很开心的。" }
+},
+AskingQuestions: {
+"286": { en: "Where are you going?", cn: "你去哪儿？" },
+"287": { en: "Where did you go for dinner yesterday?", cn: "你们昨天去哪儿吃的饭？" },
+"288": { en: "When will he come to see you?", cn: "他什么时候来看你？" },
+"289": { en: "When did you buy the car?", cn: "你什么时候买的车？" },
+"290": { en: "Who told you?", cn: "谁告诉你的？" },
+"291": { en: "Who will accompany you to the airport?", cn: "谁将陪你去机场？" },
+"292": { en: "Why don't you agree?", cn: "你为什么不同意？" },
+"293": { en: "Why not go out for a walk?", cn: "干吗不出去散步？" },
+"294": { en: "How did you spend your holiday?", cn: "你假期怎么过的？" },
+"295": { en: "How are you doing these days?", cn: "这些日子你怎么样？" },
+"296": { en: "What did he say in the letter?", cn: "他在信里说什么了？" },
+"297": { en: "What are you going to do with the books?", cn: "你打算拿这些书怎么办？" },
+"298": { en: "What were you doing when I called?", cn: "我打电话给你时你在干吗？" },
+"299": { en: "I was about to leave.", cn: "我正要出门。" },
+"300": { en: "Can you guess what I was doing this morning?", cn: "你能猜到今天上午我在做什么吗？" }
+},
+MeasuringAndComparing: {
+"301": { en: "What's the height of the building?", cn: "这座楼有多高？" },
+"302": { en: "How much does the elephant weigh?", cn: "这个大象有多重？" },
+"303": { en: "What's the color of your new dress?", cn: "你的新衣服是什么颜色的？" },
+"304": { en: "What's the size of your shoes?", cn: "你的鞋多大尺寸？" },
+"305": { en: "My brother is twice as tall as your sister.", cn: "我弟弟比你妹妹高一倍。" },
+"306": { en: "My grandma is 40 years older than me.", cn: "我祖母比我大40岁。" },
+"307": {en: "This river is one third as long as that river.", cn: "这条河只有那条河的三分之一长。" },
+"308": { en: "What's the shape of your balloon?", cn: "你的气球是什么形状？" },
+"309": { en: "How wide is this bridge?", cn: "这座桥有多宽？" },
+"310": { en: "How thick is the ice here?", cn: "这儿的冰有多厚？" },
+"311": { en: "This metal is harder than that one.", cn: "这种金属比那种硬。" },
+"312": { en: "He can run as fast as Jim.", cn: "他跑的和吉姆一样快。" },
+"313": { en: "Kate is smarter than I.", cn: "凯特比我聪明。" },
+"314": { en: "How long do you watch TV every day?", cn: "你每天看多长时间电视？" },
+"315": { en: "How often do you go swimming?", cn: "你多久去游一次泳？" }
+},
+AskingForHelp: {
+"316": { en: "Would you please open the door for me?", cn: "请你帮忙开个门好吗？" },
+"317": { en: "May I ask you a question?", cn: "我能问你个问题吗？" },
+"318": { en: "Please give me a hand.", cn: "请帮我个忙。" },
+"319": { en: "Could you do me a favor?", cn: "能请你帮个忙吗？" },
+"320": { en: "Would you help me remove the refrigerator?", cn: "能帮忙移一下冰箱吗？" },
+"321": { en: "Get me my coat, please.", cn: "请帮我拿下外套。" },
+"322": { en: "Make me a cup of coffee, will you?", cn: "给我冲杯咖啡，好吗？" },
+"323": { en: "Call me tomorrow if you have time.", cn: "明天要有时间就给我打个电话。" },
+"324": { en: "Could you tell me where I can find these books?", cn: "您能告诉我在哪儿能找到这些书吗？" },
+"325": { en: "Certainly.", cn: "当然。" },
+"326": { en: "With pleasure.", cn: "很高兴。" },
+"327": { en: "I'm sorry. I'm busy now.", cn: "对不起，我现在正忙着。" },
+"328": { en: "I'm glad to, but I'm afraid I don't have the time.", cn: "我很乐意，但我恐怕没时间。" },
+"329": { en: "Would you mind closing the window for me?", cn: "能帮我关一下窗户吗？（你介意关下窗户吗？）" },
+"330": { en: "Not at all.", cn: "当然可以。（当然不介意）" }
+},
+AskingDirections: {
+"331": { en: "Excuse me, madam. Could you tell me where the post office is?", cn: "对不起，女士，请问邮局在哪里？" },
+"332": { en: "It's just around the corner.", cn: "转弯就是。" },
+"333": { en: "Excuse me, how can I get to the bus station?", cn: "对不起，汽车站怎么走？" },
+"334": { en: "You can take the bus and get off at the second stop.", cn: "你可以坐公共汽车第二站下。" },
+"335": { en: "Excuse me. Where is No.5 Street?", cn: "对不起，第五大街在哪儿？" },
+"336": { en: "Go straight ahead and turn left at the second crossing.", cn: "一直往前走，在第二个十字路口往左拐。" },
+"337": { en: "Excuse me. Can you tell me how to get to Mr. Hu's restaurant?", cn: "对不起，你能告诉我怎么去胡先生的餐馆吗？" },
+"338": { en: "Go on for about 100 meters. It's on your left side. You can't miss it.", cn: "往前走约100米，在你左手边，你不会错过的。" },
+"339": { en: "Which one is Mr. Jame's office?", cn: "哪间是詹姆司先生的办公室？" },
+"340": { en: "It's Room 201 on the second floor.", cn: "二楼201房间。" },
+"341": { en: "Can I use the lift?", cn: "我能用电梯吗？" },
+"342": { en: "Sorry, it's broken. You have to use the stairs.", cn: "对不起，它坏了，你只能走楼梯了。" },
+"343": { en: "Where are the stairs?", cn: "楼梯在哪里呢？" },
+"344": { en: "Go along the corridor and it's on your right side.", cn: "沿着走廊走，在你右手边。" },
+"345": { en: "Thank you for directions.", cn: "感谢你为我指路。" }
+},
+AboutMarriage: {
+"346": { en: "Are you married?", cn: "你结婚了吗？" },
+"347": { en: "I'm single.", cn: "我现在单身。" },
+"348": { en: "You have a younger brother, don't you?", cn: "你有个弟弟，是吗？" },
+"349": { en: "How is your family?", cn: "你的家人怎么样？" },
+"350": { en: "She's engaged/married to John.", cn: "她和约翰订婚/结婚了。" },
+"351": { en: "How long have you been married?", cn: "你们结婚多久了？" },
+"352": { en: "We've been married for 2 years.", cn: "我们结婚两年了。" },
+"353": { en: "My parents got married in 1954.", cn: "我父母1954年结婚的。" },
+"354": { en: "Mary gave birth to a baby last week.", cn: "玛丽上星期做妈妈了。" },
+"355": { en: "They've been divorced.", cn: "他们已离婚了。" },
+"356": { en: "His wife died a year ago. Now he lives alone.", cn: "他妻子去年去世了。现在他一个人住。" },
+"357": { en: "My aunt will come to live with me for a few days.", cn: "我阿姨会来和我住一些日子。" },
+"358": { en: "John has his own family now.", cn: "约翰现在有自己的家了。" },
+"359": { en: "Do you live with your parents?", cn: "你和你父母住一起吗？" },
+"360": { en: "No. I live in my own house.", cn: "不，我住在自己的房子里。" }
+},
+TalkingAboutNeighborsAndFriends: {
+"361": { en: "Do you know Mary?", cn: "你认识玛丽吗？" },
+"362": { en: "Sure. We have been friends since primary school.", cn: "当然，我们从小学就是朋友了。" },
+"363": { en: "Really? I was introduced to her just last weekend.", cn: "真的？上周末我才被介绍给她。" },
+"364": { en: "What is she doing now?", cn: "她现在干些什么呢？" },
+"365": { en: "She told me she wanted to start a company.", cn: "她告诉我她想开公司。" },
+"366": { en: "Start a company? But I thought she would be a scholar.", cn: "开公司？我原以为她会成为一个学者" },
+"367": { en: "People are always changing, aren't they?", cn: "人总是在变，不是吗？" },
+"368": { en: "Yes, you're right. After all, she is smart enough to go into business.", cn: "是啊，你说的对。毕竟，她完全有经商才智。" },
+"369": { en: "But she doesn't have much experience.", cn: "但她没有太多经验。" },
+"370": { en: "You two don't have much contact？", cn: "你们俩没怎么联系吗？" },
+"371": { en: "No, I only wrote her one letter this year.", cn: "是的，今年我才给她写过一封信。" },
+"372": { en: "And her?", cn: "她呢？" },
+"373": { en: "She sent me a Christmas card last year.", cn: "去年寄过一张圣诞卡。" },
+"374": { en: "Oh, that's not good.", cn: "哦，那可不好。" },
+"375": { en: "Yes, we should try to contact more.", cn: "是的，我们应该联系多点。" }
+},
+PlanningTheFuture: {
+"376": { en: "What time are you going to leave for the airport tomorrow?", cn: "你明天打算什么时候去机场？" },
+"377": { en: "Is he coming to dinner?", cn: "他回来吃饭吗？" },
+"378": { en: "I'm going to the bookstore. Will you go with me?", cn: "我要去书店，你和我去吗？" },
+"379": { en: "They're going to discuss it at the meeting next Friday.", cn: "他们将在下周五的会上讨论这个问题。" },
+"380": { en: "I'll be waiting for you at the restaurant this time tomorrow.", cn: "我明天这时候在餐馆等你。" },
+"381": { en: "After I get home, I'll call you.", cn: "到家以后，我会给你打电话。" },
+"382": { en: "How will you spend the evening?", cn: "你晚上干什么？" },
+"383": { en: "I'll probably stay home and watch TV.", cn: "我可能会呆在家看电视。" },
+"384": { en: "What's your plan for the summer holiday?", cn: "暑假计划干什么？" },
+"385": { en: "I'm thinking about a visit to Paris.", cn: "我在考虑去巴黎旅游。" },
+"386": { en: "There's going to be a pottery exhibition at the art gallery.", cn: "艺术馆将有一次陶瓷展。" },
+"387": { en: "You are still thinking about a Ph.D., aren't you?", cn: "你还是想学成博士，是吗？" },
+"388": { en: "What will you do about it?", cn: "你会拿这事怎么办？" },
+"389": { en: "What do you want to do after graduation?", cn: "你毕业后想干什么？" },
+"390": { en: "I'll further my study.", cn: "我想继续深造。" }
+},
+TalkingAboutTheWeather: {
+"391": { en: "Have you heard the weather forecast?", cn: "你听天气预报了吗？" },
+"392": { en: "No, what does it say?", cn: "没有，它说什么了？" },
+"393": { en: "We'll have fine weather for the next few days.", cn: "以后几天天气晴朗。" },
+"394": { en: "But it's still raining today!", cn: "可今天还在下雨。" },
+"395": { en: "It is said it will clear up tonight.", cn: "天气预报说今晚雨就会停。" },
+"396": { en: "What will it be after the clear weather?", cn: "晴天以后天气会怎么样？" },
+"397": { en: "It says a storm may come next month.", cn: "天气预报说下个月会有一场暴风雨。" },
+"398": { en: "And it may get colder, it's already November.", cn: "并且天气会更冷。" },
+"399": { en: "Yes, and I hope we can have some snow this winter.", cn: "是的，我希望今年冬天会下雪。" },
+"400": { en: "I'm afraid it won't be cold enough for a snowfall.", cn: "我恐怕天不会冷的下雪。" },
+"401": { en: "But last year we had a big one.", cn: "但去年下了大雪。" },
+"402": { en: "Yes, but you know global warming may raise the temperature.", cn: "是的，但全球变暖会使气温上升。" },
+"403": { en: "You are probably right.", cn: "你也许是对的。" },
+"404": { en: "I'm going skiing in the Alps next month.", cn: "下个月我去阿尔卑斯山滑雪。" },
+"405": { en: "I hope the weather there is cold enough.", cn: "我希望那儿天气够冷。" }
+},
+AboutSickness: {
+"406": { en: "How are you feeling today?", cn: "你今天感觉怎么样？" },
+"407": { en: "I don't feel very well.", cn: "我觉得不太舒服。" },
+"408": { en: "Do you feel better now?", cn: "你现在觉得好点了吗？" },
+"409": { en: "Much better.", cn: "好多了。" },
+"410": { en: "I'm sick.", cn: "我病了。" },
+"411": { en: "He's got a bad headache.", cn: "他头痛的厉害。" },
+"412": { en: "My fever is gone.", cn: "我的烧已经退了。" },
+"413": { en: "What's the matter with you?", cn: "你怎么啦？" },
+"414": { en: "I've got a pain in my back.", cn: "我背疼。" },
+"415": { en: "It really hurts.", cn: "可真疼。" },
+"416": { en: "It hurts right here.", cn: "就这儿疼。" },
+"417": { en: "It's bleeding. You'd better see a doctor about that cut.", cn: "在流血呢，你最好找个医生看看这伤口。" },
+"418": { en: "Call the doctor!", cn: "快打电话叫医生！" },
+"419": { en: "Take two pills and have a good rest.", cn: "吃两片药，好好休息一下。" },
+"420": { en: "I hope you'll be well soon.", cn: "祝你早日恢复健康。" }
+},
+TalkingAboutHabits: {
+"421": { en: "I get up at 8 every morning.", cn: "每天早上我8点起床。" },
+"422": { en: "I then take a bath in the bathroom.", cn: "然后我去洗澡间洗个澡。" },
+"423": { en: "I shave, brush my teeth, and comb my hair.", cn: "我洗脸，刷牙，梳头。" },
+"424": { en: "I put on a bit of makeup.", cn: "我化一点妆。" },
+"425": { en: "I cooked breakfast for the family.", cn: "我为一家人做早餐。" },
+"426": { en: "I go downstairs and have my breakfast.", cn: "我下楼吃早饭。" },
+"427": { en: "I read the newspaper over breakfast.", cn: "我边吃早饭边看报纸。" },
+"428": { en: "I wake my sister up.", cn: "我叫醒我妹妹。" },
+"429": { en: "I dress my sister and wash her hands and face.", cn: "我给我妹妹穿衣服，洗脸洗手。" },
+"430": { en: "I get to my office at 10:30.", cn: "十点半到办公室。" },
+"431": { en: "I leave the office at 7.", cn: "我七点离开办公室。" },
+"433": { en: "I buy some food on my way home.", cn: "我回家路上买些吃的。" },
+"434": { en: "I pick up my sister from her school.", cn: "我到学校接妹妹。" },
+"435": { en: "We go to bed at 10:30.", cn: "我们十点半睡觉。" }
+},
+AskingForOthersOpinions: {
+"436": { en: "What do you think about it?", cn: "你对此怎么看？" },
+"437": { en: "Is that right?", cn: "那样对吗？" },
+"438": { en: "Absolutely right.", cn: "绝对正确。" },
+"439": { en: "I think you're mistaken about that.", cn: "我想你那样不对。" },
+"440": { en: "Is that ok?", cn: "这样行吗？" },
+"441": { en: "That's ok/fine.", cn: "挺好的。" },
+"442": { en: "That's excellent.", cn: "那太棒了。" },
+"443": { en: "He was absent yesterday. Do you know why?", cn: "昨天他没到，你知道为什么吗？" },
+"444": { en: "Do you have any idea?", cn: "你怎么想？" },
+"445": { en: "I suppose he was sick.", cn: "我猜他大概是病了。" },
+"446": { en: "Will it rain tomorrow?", cn: "明天会下雨吗？" },
+"447": { en: "No, I don't think so.", cn: "不，我想不会。" },
+"448": { en: "Do you really want to know what I think?", cn: "你真想知道我怎么想吗？" },
+"449": { en: "Please give me your advice.", cn: "请给我提些建议。" },
+"450": { en: "I want to hear your opinion.", cn: "我想听听你们想法。" }
+},
+MakingPlans: {
+"451": { en: "What do you plan to do this Friday?", cn: "这周五你打算干什么？" },
+"452": { en: "What are you doing next week?", cn: "下周你干什么？" },
+"453": { en: "I plan to go to the concert.", cn: "我打算去听音乐会。" },
+"454": { en: "I'm thinking of going to my grandma's.", cn: "我想去外婆家。" },
+"455": { en: "I'll go skiing if the weather permits.", cn: "天气允许的话，我会去滑雪。" },
+"456": { en: "I suppose I can finish the project next year.", cn: "我想我明年完成此工程。" },
+"457": { en: "I have no idea.", cn: "我不知道。" },
+"458": { en: "It's up to you.", cn: "由你决定。" },
+"459": { en: "I'm considering buying a house.", cn: "我想买套房子。" },
+"460": { en: "Hi, Jack, what lessons will you take this semester?", cn: "你好，杰克，这学期你选什么课？" },
+"461": { en: "Hi, Lucy. I'll take French and Economics.", cn: "你好，露西，我想选法语和经济。" },
+"462": { en: "I'm taking Chinese and History.", cn: "我将选中文和历史。" },
+"463": { en: "Do you plan to do some odd jobs?", cn: "你打算打工吗？" },
+"464": { en: "Yes, I'm applying to work at the library.", cn: "是的，我在申请图书馆管理员的工作。" },
+"465": { en: "Good luck!", cn: "祝你好运。" }
+},
+AboutDecisions: {
+"466": { en: "It's up to you.", cn: "由你决定。" },
+"467": { en: "You have the final say.", cn: "你说了算。" },
+"468": { en: "She insists that it doesn't matter.", cn: "她坚持说那没关系。" },
+"469": { en: "He's made up his mind to quit his job.", cn: "他已决定辞去他的工作。" },
+"470": { en: "I've decided not to sell the house.", cn: "我决定不卖房子了。" },
+"471": { en: "I'm determined to leave.", cn: "我决意要走了。" },
+"472": { en: "Have you decided?", cn: "你决定了吗？" },
+"473": { en: "No, I haven't decided yet.", cn: "不，还没有。" },
+"474": { en: "I've changed my mind.", cn: "我改注意了。" },
+"475": { en: "It's still undecided.", cn: "还没决定。" },
+"476": { en: "Don't hesitate any more.", cn: "别在犹豫了。" },
+"477": { en: "Give me a definite answer, please.", cn: "请给个明确的答复。" },
+"478": { en: "It's really hard to make a decision.", cn: "挺难做决定的。" },
+"479": { en: "I'm always making resolutions, like giving up smoking.", cn: "我总在做出决定，比如戒烟。" },
+"480": { en: "Don't shilly-shally. / Don't dilly-dally.", cn: "别犹豫不决。" }
+},
+Traveling: {
+"481": { en: "Do you like traveling?", cn: "你喜欢旅游吗？" },
+"482": { en: "Yes, I've just come back from Scotland.", cn: "是的，我刚从苏格兰回来。" },
+"483": { en: "How did you get there?", cn: "你怎么去的？" },
+"484": { en: "I got there by plane.", cn: "我坐飞机去的。" },
+"485": { en: "Where did you visit?", cn: "你去参观了哪些地方？" },
+"486": { en: "I only had time to visit Edinburgh.", cn: "我只有时间去爱丁堡。" },
+"487": { en: "How did you like it?", cn: "你喜欢那儿吗？" },
+"488": { en: "It's fantastic.", cn: "那儿棒极了。" },
+"489": { en: "Why did you go there?", cn: "你为什么去那儿？" },
+"490": { en: "I went there on business.", cn: "我出差到那儿。" },
+"491": { en: "And do you have friends there?", cn: "你在那儿有朋友吗？" },
+"492": { en: "Yes, a lot of friends.", cn: "是的，很多。" },
+"493": { en: "You must have enjoyed yourself.", cn: "你一定玩的很开心。" },
+"494": { en: "Yes, and I took many pictures.", cn: "是的，我还照了好多照片。" },
+"495": { en: "Please let me see them.", cn: "让我看看。" }
+},
+AboutShopping: {
+"496": { en: "Will you go shopping with me?", cn: "你跟我去买东西吗？" },
+"497": { en: "Here's your change.", cn: "这是找你的钱。" },
+"498": { en: "I'll go to pick up some odds and ends at the store.", cn: "我要到商店买些零碎的东西。" },
+"499": { en: "Excuse me, would you tell me where I can get some butter?", cn: "打扰一下，您能告诉我黄油在哪儿卖吗？" },
+"500": { en: "May I have a look at the watch?", cn: "我能看看这块表吗？" },
+"501": { en: "May I try it on?", cn: "我能试试吗？" },
+      "502": { en: "This is too small for me. Do you have a bigger one?", cn: "这个太小了，有大点的吗？" },
+      "503": { en: "Do you have any more colors?", cn: "有别的颜色吗？" },
+      "504": { en: "What's your size?", cn: "你穿多大号？" },
+      "505": { en: "It suits you to a T.", cn: "特别适合你。" },
+      "506": { en: "It's too expensive for me.", cn: "对于我来说太贵了。" },
+      "507": { en: "Can you come down a bit?", cn: "可以再便宜点吗？" },
+      "508": { en: "I'll take it.", cn: "我买了。" },
+      "509": { en: "How much is it?", cn: "这卖多少钱？" },
+      "510": { en: "How much do I owe you?", cn: "我该付多少钱？" }
+    },
+    InTheRestaurant: {
+      "511": { en: "What would you like to eat?", cn: "你想吃点什么？" },
+      "512": { en: "Are you ready to order?", cn: "你要点菜了吗？" },
+      "513": { en: "I'd like some steak and bread.", cn: "我要牛排和面包。" },
+      "514": { en: "What would you like for dessert?", cn: "你要什么甜点？" },
+      "515": { en: "I'll have some ice cream.", cn: "我要冰淇淋。" },
+      "516": { en: "Do you want some fruit?", cn: "你要水果吗？" },
+      "517": { en: "Yes, please. I want an apple.", cn: "是的，我要一个苹果。" },
+      "518": { en: "Anything to drink?", cn: "喝点什么？" },
+      "519": { en: "A small glass of whisky, please.", cn: "请来一小杯威士忌。" },
+      "520": { en: "Here is your food.", cn: "你的菜来了。" },
+      "521": { en: "Bring me the bill please.", cn: "请买单。" },
+      "522": { en: "Can I pay by check or credit card?", cn: "我能用支票或信用卡吗？" },
+      "523": { en: "Sorry, we only take cash.", cn: "对不起，我们只收现金。" },
+      "524": { en: "Here you are.", cn: "给。" },
+      "525": { en: "Here is your change.", cn: "找您的钱。" }
+    },
+    AboutEveningEntertainment: {
+      "526": { en: "I'm free tonight.", cn: "我今晚有空。" },
+      "527": { en: "Shall we go to the cinema?", cn: "我们去看电影好吗？" },
+      "528": { en: "Do you know what's on tonight?", cn: "你知道今天上演什么？" },
+      "529": { en: "May I ask you for a dance?", cn: "可以请你跳支舞吗？" },
+      "530": { en: "With pleasure.", cn: "很荣幸。" },
+      "531": { en: "Sorry, I'm engaged.", cn: "对不起，我有约在先了。" },
+      "532": { en: "What about another dance?", cn: "再跳一曲好吗？" },
+      "533": { en: "You're a good dancer.", cn: "你舞跳的真好。" },
+      "534": { en: "What's on Channel 8 now?", cn: "现在8频道播什么节目？" },
+      "535": { en: "I don't know. You may look in the TV Guide.", cn: "我不知道，你可以看看《电视报》。" },
+      "536": { en: "Let's see what else is on.", cn: "咱们看看有没有别的节目。" },
+      "537": { en: "Did you see the special last night?", cn: "昨晚你看特别节目了吗？" },
+      "538": { en: "I don't want to see any more of this TV show.", cn: "我不想再看这个电视节目了。" },
+      "539": { en: "Can we change the channel?", cn: "能换个频道吗？" },
+      "540": { en: "I want to see the weather.", cn: "我想看天气预报。" }
+    },
+    Appointments: {
+      "541": { en: "I'd like to make an appointment with Mrs. Green.", cn: "我想约个时间见格林女士。" },
+      "542": { en: "She's free on Friday and Saturday.", cn: "她周五和周六有空。" },
+      "543": { en: "Sorry, can I see her before Friday?", cn: "对不起，我能周五之前见她吗？" },
+      "544": { en: "Let me see. She has 30 minutes on Tuesday afternoon.", cn: "让我查查，她周二下午有30分钟。" },
+      "545": { en: "At what time?", cn: "什么时间？" },
+      "546": { en: "From 4 to 4:30.", cn: "四点到四点半。" },
+      "547": { en: "All right.", cn: "好吧。" },
+      "548": { en: "So you'll come then. Please phone in if you can't make it.", cn: "那么你就那时来，如果来不了，请打电话给我。" },
+      "549": { en: "I have an interview this afternoon.", cn: "我今天下午有面试。" },
+      "550": { en: "I can come any time except Sunday.", cn: "除星期天外我都能来。" },
+      "551": { en: "You can reach me at 6609823.", cn: "你打电话6609823就能找到我。" },
+      "552": { en: "He phoned to cancel the meeting.", cn: "他打电话来取消会议。" },
+      "553": { en: "Please call me before you come.", cn: "你来之前请打电话。" },
+      "554": { en: "Please make an appointment with my secretary.", cn: "请跟我秘书定个见面时间。" },
+      "555": { en: "I have to change my appointment from Monday to Thursday.", cn: "我不得不把约会从周一改到周四。" }
+    },
+    SeeingADoctor: {
+      "556": { en: "What's your trouble?", cn: "你有什么不舒服？" },
+      "557": { en: "How long have you had it?", cn: "你得这病多久了？" },
+      "558": { en: "I should say you've caught a cold.", cn: "我看你感冒了。" },
+      "559": { en: "You need an injection.", cn: "你需要打针。" },
+      "560": { en: "Is it serious?", cn: "我的病严重吗？" },
+      "561": { en: "Do I need to be hospitalized?", cn: "我需要住院吗？" },
+      "562": { en: "Have you seen the doctor?", cn: "你看过医生了吗？" },
+      "563": { en: "What did the doctor say?", cn: "医生怎么说？" },
+      "564": { en: "Jack is up and about now.", cn: "杰克病后复原了。" },
+      "565": { en: "The doctor says that I should take quinine.", cn: "医生说我应该服用奎宁。" },
+      "566": { en: "What sort of medicine do you take?", cn: "你吃的是什么药？" },
+      "567": { en: "The doctor says that I should not eat anything oily.", cn: "医生说我不能吃油腻的东西。" },
+      "568": { en: "I had a shot of penicillin.", cn:"我打了一针青霉素。" },
+"569": { en: "You have to be operated on.", cn: "你得做手术。" },
+"570": { en: "He gave me a chest X-ray and took my blood pressure.", cn: "他给我做了X光胸透并量了血压。" }
+},
+MakingAPhonecall: {
+"571": { en: "Hello. May I speak to Mr. Green?", cn: "你好，我找格林先生。" },
+"572": { en: "Just a moment.", cn: "等一会儿。" },
+"573": { en: "Hold on.", cn: "等一会儿。" },
+"574": { en: "He's not in. May I take a message for him?", cn: "他不在，我能替他捎个口信吗？" },
+"575": { en: "Yes, please.", cn: "是的，麻烦了。" },
+"576": { en: "Would you answer the phone please?", cn: "你能接下电话吗？" },
+"577": { en: "I want to make a long distance call.", cn: "我想打个长途电话。" },
+"578": { en: "This is Mary Speaking.", cn: "我是玛丽。" },
+"579": { en: "Would you tell Mr. Green that I called?", cn: "你能告诉格林先生我给他打了个电话吗？" },
+"580": { en: "I must have dialed a wrong number.", cn: "我一定拨错号了。" },
+"581": { en: "I couldn't get through.", cn: "我打不通。" },
+"582": { en: "I have to hang up now.", cn: "我得挂电话了。" },
+"583": { en: "Would you call back tomorrow?", cn: "你能明天回个电话吗？" },
+"584": { en: "There's something wrong with the phone.", cn: "电话出了点儿毛病。" },
+"585": { en: "I tried to call you, but the line was busy.", cn: "我试着给你打电话，但老占线。" }
+},
+AboutMail: {
+"586": { en: "I have received a letter from my cousin.", cn: "我收到了我表兄的信。" },
+"587": { en: "I haven't heard from him for a long time.", cn: "我很久没有收到他的信了。" },
+"588": { en: "Send a postcard to me when you arrive in Shanghai.", cn: "你到上海以后给我发张明信片。" },
+"589": { en: "I put some photographs in the envelope.", cn: "我在信里夹了几张照片。" },
+"590": { en: "He hasn't answered my letter yet.", cn: "他还没有给我回信。" },
+"591": { en: "My mother mailed me a parcel.", cn: "我妈给我寄了一个包裹。" },
+"592": { en: "We keep in touch with each other by Email since he left China.", cn: "他离开中国以后，我们用Email保持联系。" },
+"593": { en: "Don't forget to put stamps on your letter.", cn: "别忘了贴邮票。" },
+"594": { en: "How long does it take for a letter to get to America from Beijing?", cn: "信从北京到美国要多久？" },
+"595": { en: "You've got an express mail.", cn: "你有特快专递。" },
+"596": { en: "To make it fast, you can send a fax.", cn: "要想快点的话就发个传真。" },
+"597": { en: "My mother has sent me a registered letter. I guess she has something important to tell me.", cn: "我妈给我发了一封挂号信，我想她有什么重要的事情要说。" },
+"598": { en: "I found my name on the blackboard. I must have got a remittance.", cn: "我在黑板上看到我的名字，肯定有我的汇款。" },
+"599": { en: "Do you want to airmail it or not?", cn: "你想发航空信吗？" },
+"600": { en: "I dropped the letter into the mailbox in front of the Post Office.", cn: "我把信塞进邮局前面的邮筒里。" }
+},
+TalkingAboutFeelings: {
+"601": { en: "You look radiant tonight.", cn: "你今晚真是光彩照人。" },
+"602": { en: "It was a terrible experience.", cn: "那是一次可怕的经历。" },
+"603": { en: "I am on top of the world.", cn: "我高兴到了极点。" },
+"604": { en: "The dinner was wonderful.", cn: "晚餐棒极了。" },
+"605": { en: "The Christmas tree is gorgeous.", cn: "圣诞树真华美。" },
+"606": { en: "What a boring movie it is!", cn: "多么无聊的一场电影啊。" },
+"607": { en: "How can he give us such a tedious lecture!", cn: "他怎么能做这么沉闷乏味的演讲。" },
+"608": { en: "How fragrant the flowers are!", cn: "这些花真香！" },
+"609": { en: "The party is making too much noise.", cn: "这次聚会太吵了。" },
+"610": { en: "You look elegant in that dress.", cn: "你穿这条裙子显的很漂亮。" },
+"611": { en: "The coat doesn't suit you.", cn: "这件外衣不太适合你。" },
+"612": { en: "His flattery makes me sick.", cn: "他的恭维让我恶心。" },
+"613": { en: "We had a good time.", cn: "我们玩的很开心。" },
+"614": { en: "We enjoyed ourselves very much.", cn: "我们玩的很开心。" },
+"615": { en: "I am bored to death.", cn: "我无聊死了。" }
+},
+LookingForAHouse: {
+"616": { en: "This house is for rent.", cn: "此房出租。" },
+"617": { en: "It's really a bargain.", cn: "租金很便宜。" },
+"618": { en: "I want to rent a furnished house.", cn: "我想要有家具的房子。" },
+"619": { en: "That house is for sale. It has central heating.", cn: "此房出售，房子里有供暖设备。" },
+"620": { en: "What kind of furniture do you like?", cn: "你喜欢什么样的家具？" },
+"621": { en: "This is a rather old house. It needs painting.", cn: "这房子挺旧的，得刷一下才行。" },
+"622": { en: "I want an apartment with two bedrooms and a kitchen.", cn: "我想要一套有两间卧室和一个厨房的公寓。" },
+"623": { en: "The houses downtown are very expensive.", cn: "市区的房子很贵。" },
+"624": { en: "How much is the rent for a month?", cn: "每月租金多少？" },
+"625": { en: "I feel at home living here. The landlady is very kind to me.", cn: "我觉得住在这里象在家里一样。房东太太对我很好。" },
+"626": { en: "We have a few kitchen things and a dining room set.", cn: "我们有一些厨房用具和一套餐厅设备。" },
+"627": { en: "There's no gas range in the kitchen, but you can use the electric stove.", cn: "厨房里没有煤气灶，但你可以用电炉。" },
+"628": { en: "There is a shower in the bathroom.", cn: "浴室里有淋浴器。" },
+"629": { en: "I have a dog, but it's very quiet.", cn: "我有一只狗，不过它很安静。" },
+"630": { en: "Theroom has a big closet. You can put your baggage in it.", cn: "房间里有一个很大的壁橱，你可以把你的行李放进去。" }
+},
+TalkingAboutDressing: {
+"631": { en: "What will you wear for the party?", cn: "晚会上你穿什么？" },
+"632": { en: "I'll wear my blue dress.", cn: "我会穿我的兰色裙子。" },
+"633": { en: "Don't you think it's too formal?", cn: "你不觉得太正式了吗？" },
+"634": { en: "Why? What will you wear?", cn: "为什么？你会穿什么？" },
+"635": { en: "Just my shirt and jeans.", cn: "我就穿衬衣和牛仔裤。" },
+"636": { en: "You should have your suit cleaned and ironed.", cn: "你应该把你的套装拿去洗烫一下。" },
+"637": { en: "You'd better put on your jacket. It's cold outside.", cn: "你最好穿上夹克，外面冷。" },
+"638": { en: "The blouse no longer fits me.", cn: "这件衬衣不再合我身了。" },
+"639": { en: "My son has outgrown these trousers.", cn: "我儿子已经长的穿不了这条裤子了。" },
+"640": { en: "The shoes are worn-out.", cn: "这鞋已经不能穿了。" },
+"641": { en: "I don't like wearing the uniform.", cn: "我不喜欢穿制服。" },
+"642": { en: "Do you want to change before the banquet?", cn: "宴会前你想换衣服吗？" },
+"643": { en: "Your shoe lace is loose.", cn: "你的鞋带松了。" },
+"644": { en: "You forgot to fasten the collar buttons.", cn: "你忘了系领带。" },
+"645": { en: "Take off your hat. It doesn't fit.", cn: "取下你的帽子，它不适合你。" }
+},
+ExpressingDifferentOpinions: {
+"646": { en: "He is a very creative student.", cn: "他是个很有创造力的学生。" },
+"647": { en: "What you have said about this is very interesting.", cn: "你说的很有意思。" },
+"648": { en: "I cannot agree with you on this point.", cn: "在这一点上，我不能同意你的意见。" },
+"649": { en: "You've got the point.", cn: "你抓住了问题的实质。" },
+"650": { en: "That's the point.", cn: "这正是问题的关键。" },
+"651": { en: "The whole class is in a heated discussion.", cn: "全班同学正在热烈讨论。" },
+"652": { en: "Let's just run through the arguments for and against.", cn: "我们来看一下赞成和反对的理由。" },
+"653": { en: "Please sum up what you said just now.", cn: "请把你刚才说的总结一下。" },
+"654": { en: "Has anybody else anything to say on this?", cn: "关于这点，谁还有什么别的要说吗？" },
+"655": { en: "Does anybody share David's opinion?", cn: "有谁同意大卫的观点吗？" },
+"656": { en: "Is there any evidence to support what you have said?", cn: "有什么证据可以支持你的说法吗？" },
+"657": { en: "Well, it depends.", cn: "这得视情况而定。" },
+"658": { en: "I don't think it's necessary for us to discuss this question any further.", cn: "我想我们没有必要进一步讨论这个问题。" },
+"659": { en: "There are always two sides to everything.", cn: "每件是都有两面性。" },
+"660": { en: "Finally, we came to an agreement.", cn: "最后我们达成了一致。" }
+},
+AboutThingsInTheFuture: {
+"661": { en: "I want to be a journalist after graduation.", cn: "毕业后我想当记者。" },
+"662": { en: "If it doesn't rain tomorrow, we'll have a picnic.", cn: "如果明天不下雨，我们就去野餐。" },
+"663": { en: "As soon as he comes, we'll let him know.", cn: "他一来，我们就告诉他。" },
+"664": { en: "You can stay as long as you pay the rent on time.", cn: "只要你按时交房租，你就能住这儿。" },
+"665": { en: "When she leaves, he'll cry for a day.", cn: "她走时，他会哭一天。" },
+"666": { en: "She will go into business when she wants to.", cn: "她想经商时就会去经商。" },
+"667": { en: "I'll leave for London if I finish my work today.", cn: "如果我今天完成工作，我就会去伦敦。" },
+"668": { en: "I'll work for 5 years and then go back to school.", cn: "我会工作五年，然后回学校。" },
+"669": { en: "He will become a writer if he goes on doing well in writing.", cn: "如果他仍写的这么好的话，他将成为一个作家。" },
+"670": { en: "I hope he will meet me at the airport.", cn: "我希望他能到机场接我。" },
+"671": { en: "I'm thinking of quitting the job.", cn: "我在考虑辞职。" },
+"672": { en: "I plan to learn photography.", cn: "我打算学摄影。" },
+"673": { en: "What do you say we have a party this weekend?", cn: "我们周末开个派对，你觉得怎么样？" },
+"674": { en: "She will certainly remain single.", cn: "她肯定会保持独身。" },
+"675": { en: "He will probably follow in his father's footsteps.", cn: "他可能会继承父业。" }
+},
+ThingsThatMightHaveHappened: {
+"676": { en: "I would have had a much better holiday if I had stayed at home.", cn: "我要是呆在家里的话，假期会好过的多。" },
+"677": { en: "What have you been doing since I saw you last time?", cn: "自从我上次见到你以后你都在干什么？" },
+"678": { en: "If I had got enough money yesterday, I would have bought that tape.", cn: "如果我昨天钱够的话，我就买了那盒磁带了。" },
+"679": { en: "Looking back on it, I think I shouldn't have given up the contest so easily.", cn: "回过头来看，我想我不应该如此轻易的放弃那次比赛。" },
+"680": { en: "Had I taken a taxi, I wouldn't have been late.", cn: "如果我打的去的话就不会迟到了。" },
+"681": { en: "Even if you take the exam again, you won't pass it.", cn: "就算再考一次你也通不过。" },
+"682": { en: "Even if you had given him much more money, he might not have paid off the debt.", cn: "就算你给了他更多的钱，他也还不清债务。" },
+"683": { en: "What would you have done if you hadn't gone out for a picnic yesterday?", cn: "如果你昨天没有出去野餐的话。你会干什么？" },
+"684": { en: "I wish I had told him the truth.", cn: "我真希望我把真相告诉了他。" },
+"685": { en: "I wish you hadn't cheated me.", cn: "我希望你没有欺骗我。" },
+"686": { en: "If it had been fine, we would have gone to the park.", cn: "如果天气好的话，我们就去公园了。" },
+"687": { en: "Would he have seen you if you hadn't waved to him?", cn: "如果你没有朝他挥手，他能看见你吗？" },
+"688": { en: "You should have studied much harder.", cn: "你本应该更努力的学习。" },
+"689": { en: "I had thought about arguing with the teacher about that, but I didn't have enough courage.", cn: "我本想和老师争论那个问题，但我没有足够的勇气。" },
+"690": { en: "I had thought about living with my grandparents when my parents went abroad last year.", cn: "当我的父母去年出国的时候，我本想和我的祖父母住在一起。" }
+},
+TalkingAboutLikesAndDislikes: {
+"691": { en: "What's your favorite sport?", cn: "你最喜欢什么运动？" },
+"692": { en: "I like football best.", cn: "我最喜欢足球。" },
+"693": { en: "Football is my favorite.", cn: "足球是我最喜欢的。" },
+"694": { en: "Which do you prefer, fishing or mountain-climbing?", cn: "钓鱼和登山，你更喜欢哪一个？" },
+"695": { en: "Neither.", cn: "哪个都不喜欢。" },
+"696": { en: "What do you like best, apples, pears, or bananas?", cn: "苹果，梨，香蕉，你最喜欢哪个？" },
+"697": { en: "He's crazy about Michael Jordan.", cn: "他疯狂喜爱迈克·乔丹。" },
+"698": { en: "She hates boxing.", cn: "她讨厌拳击。" },
+"699": { en: "She is sick of watching boxing.", cn: "她厌恶观看拳击。" },
+"700": { en: "She has good taste in clothes.", cn: "她对服装很有鉴赏力。" },
+"701": { en: "What do you like to do in your spare time?", cn: "空闲时你喜欢干什么？" },
+"702": { en: "I like collecting stamps.", cn: "我喜欢收集邮票。" },
+"703": { en: "I prefer tea to coffee.", cn: "和咖啡相比，我更喜欢茶。" },
+"704": { en: "What do you dislike most about this movie?", cn: "这部电影你最不喜欢什么？" },
+"705": { en: "I would rather sleep than watch this movie.", cn: "我情愿睡觉也不看这部电影。" }
+},
+PuttingForwardYourOwnOpinions: {
+"706": { en: "You should take the advice of your teacher.", cn: "你应该听老师的话。" },
+"707": { en: "That's just what I was looking for.", cn: "那正是我所期待的。" },
+"708": { en: "It might be, I suppose.", cn: "我想可能是这样。" },
+"709": { en: "Good try, but not quite right.", cn: "是个很好的尝试，但并不完全正确。" },
+"710": { en: "That's rather disappointing.", cn: "真是让人失望。" },
+"711": { en: "In my opinion, your new coat is not worth so much money.", cn: "我认为你的外套不值得这么多钱。" },
+"712": { en: "Would you mind not spitting everywhere?", cn: "不要随地吐痰行吗？" },
+"713": { en: "It's only a suggestion, you don't have to take it.", cn: "这只是一个建议，你可以不听。" },
+"714": { en: "If you really want my advice I don't think you should quit school.", cn: "如果你真想听我的意见，我想你不应该退学。" },
+"715": { en: "Thanks for your advice but I have to consider it myself.", cn: "谢谢你的建议，但我得自己想想。" },
+"716": { en: "He does not pay attention to anybody. You are wasting your time in persuading him.", cn: "他谁的话也不听，你劝他是在浪费时间。" },
+"717": { en: "I am old enough to make up my own mind.", cn: "我已经长大了，可以自己拿主意了。" },
+"718": { en: "Your work seems unsatisfactory. / Your work does not seem satisfactory.", cn: "你的工作看起来并不令人满意。" },
+"719": { en: "What about your opinion?", cn: "你怎么想？" },
+"720": { en: "In general I agree with you.", cn: "我大体上同意你的看法。" }
+},
+AskingForHelp: {
+"721": { en: "Would you open the door for me, please?", cn: "你能替我开门吗？" },
+"722": { en: "With pleasure.", cn: "乐意帮忙。" },
+"723": { en: "Would you mind opening the window?", cn: "你介意开窗吗？" },
+"724": { en: "Not at all.", cn: "一点儿也不。" },
+"725": { en: "I wondered if you could buy me some pencils?", cn: "我不知道你是否能替我买铅笔？" },
+"726": { en: "Sure.", cn: "当然。" },
+"727": { en: "Would you be so kind as to lend me some money?", cn: "你能借我一点儿钱吗？" },
+"728": { en: "No problem. How much?", cn: "没问题，你要多少？" },
+"729": { en: "I hope I'm not bothering you.", cn: "我希望我没有打扰你。" },
+"730": { en: "I hope that will not cause you too much trouble.", cn: "我希望那不会给你添太多麻烦。" },
+"731": { en: "I really appreciate your help.", cn: "我非常感谢你的帮助。" },
+"732": { en: "I don't want to put you to any trouble.", cn: "我不想麻烦你。" },
+"733": { en: "Excuse me, would you give me a hand?", cn: "对不起，你能帮我个忙吗？" },
+"734": { en: "I'd be glad to help.", cn: "我乐意帮忙。" },
+"735": { en: "Would you mind mailing this letter for me?", cn: "你能替我寄这封信吗？" }
+},
+GettingReadyForAJourney: {
+"736": { en: "I have so many things to do before I leave.", cn: "我走之前还有很多事情要做。" },
+"737": { en: "I have to drop by the bank to get some money.", cn: "我得到银行去取一下钱。" },
+"738": { en: "Traveler's checks are very convenient for long-distance travel.", cn: "旅行支票对于长途旅行很方便。" },
+"739": { en: "Do you have anything to declare?", cn: "你有什么东西要向海关申报的吗？" },
+"740": { en: "You have to apply for a passport in advance.", cn: "你必须提前申请护照。" },
+"741": { en: "You don't have to pay any duty on personal belongings.", cn: "个人物品不需要关税。" },
+"742": { en: "Make it an hour and a half. We have to get more food.", cn: "等一个半小时吧，我们还得多准备些食物。" },
+"743": { en: "Shall we ask Betty to join us?", cn: "我们应该叫贝蒂一起去吗？" },
+"744": { en: "I put myself entirely in your hands.", cn: "我按你说的办。" },
+"745": { en: "Can you tell me the phone number of the inquiry office?", cn: "您能告诉我问讯处的电话号码吗？" },
+"746": { en: "Would you prefer to take a local train or an express?", cn: "你想坐普通车还是特快？" },
+"747": { en: "I have bought a ticket for a sleeper.", cn: "我买了张卧铺票。" },
+"748": { en: "Have you reserved your ticket?", cn: "你订票了吗？" },
+"749": { en: "I would never have thought of it if you hadn't mentioned it.", cn: "如果不是你提起的话，我肯定想不到。" },
+"750": { en: "I will see you off at the railway station.", cn: "我会去火车站送你。" }
+},
+CountriesAndNationalities: {
+"751": { en: "Where are you from?", cn: "你来自哪儿？" },
+"752": { en: "What's your nationality?", cn: "你是什么国籍？" },
+"753": { en: "What's your motherland?", cn: "你祖国是哪儿？" },
+"754": { en: "Are you a native Chinese?", cn: "你是土生土长的中国人吗？" },
+"755": { en: "What's the population of China?", cn: "中国有多少人口？" },
+"756": { en: "How many provinces do you have?", cn: "你们有多少个省？" },
+"757": { en: "What's the capital of your country?", cn: "贵国首都是哪儿？" },
+"758": { en: "I come from Japan.", cn: "我来自日本。" },
+"759": { en: "I was born in China and brought up in the U.S.A.", cn: "我出生在中国，在美国长大。" },
+"760": { en: "My country has an area of 500,000 square kilometers.", cn: "我国面积五十万平里。" },
+"761": { en: "The capital of my country is Beijing.", cn: "我国首都是北京。" },
+"762": { en: "We have 50 provinces.", cn: "我们有50个省。" },
+"763": { en: "My country is rich in natural resources.", cn: "我国自然资源丰富。" },
+"764": { en: "That nation is famous for its tourism.", cn: "那个国家以旅游业闻名。" },
+"765": { en: "The biggest festival in my country is the Spring Festival.", cn: "我国最大的节日是春节。" }
+},
+GeographyAndLandFeatures: {
+"766": { en: "Geographically, China is located in the Northern Hemisphere.", cn: "从地理位置上说，中国位于北半球。" },
+"767": { en: "In this country, the weather is usually awful.", cn: "在这个国家，天气通常十分恶劣。" },
+"768": { en: "It is a very beautiful country with many mountains.", cn: "这是一个多山的美丽国度。" },
+"769": { en: "This country is famous for its beautiful lakes.", cn: "这个国家以其美丽的湖泊而闻名于世。" },
+"770": { en: "The land in this region is rather dry and parched.", cn: "这片土地十分干燥。" },
+"771": { en: "Along the northern coast of this continent, there are many cliffs.", cn: "沿该大陆的北海岸线上有许多峭壁。" },
+"772": { en: "In Brazil, many ancient forests are very well preserved.", cn: "在巴西，古老的森林保存十分完好。" },
+"773": { en: "Lumbering is very important in some underdeveloped countries.", cn: "在一些不发达的国家，伐木业十分重要。" },
+"774": { en: "The scenery is very beautiful in the small islands in the Pacific Oceans.", cn: "太平洋上一些小岛的景色十分优美。" },
+"775": { en: "What kind of climate do you have in this country?", cn: "这个国家的气候如何？" },
+"776": { en: "In the west of America, there are many high peaks and deep canyons.", cn: "在美国西部有许多高峰和深谷。" },
+"777": { en: "Which one is the longest river in China?", cn: "中国哪条河流最长？" },
+"778": { en: "Do you get much rain in summer?", cn: "这里夏天雨水多吗？" },
+"779": { en: "Is the plain along the river good for farming?", cn: "河畔的平原易于发展农业吗？" },
+"780": { en: "It's cold and foggy in London at this time of year.", cn: "在每年的这个时候，伦敦寒冷而多雾。" }
+},
+SchoolAndEducation: {
+"781": { en: "Every one must receive 9 years of compulsory education.", cn: "每人必须接受九年的义务教育。" },
+"782": { en: "Children enter primary school at the age of 7.", cn: "孩子们7岁进小学。" },
+"783": { en: "Some students quit school due to poverty.", cn: "一些学生因贫困而辍学。" },
+"784": { en: "There is fierce competition in the College Entrance Examination.", cn: "高考竞争激烈。" },
+"785": { en: "He majored in Computers.", cn: "他主修计算机。" },
+"786": { en: "She is working for her double major in English and Economics.", cn: "她正在修英语和经济双学位。" },
+"787": { en: "I graduated from Yale University 5 years ago.", cn: "五年前，我从耶鲁大学毕业。" },
+"788": { en: "Everybody hopes to apply to a good school.", cn: "申请好学校是令人向往的。" },
+"789": { en: "Mary is in her freshman year.", cn: "玛丽大学一年级。" },
+"790": { en: "Lily is a sophomore now.", cn: "莉莉现在大学二年级。" },
+"791": { en: "Mike is already a junior.", cn: "迈克已经大学三年级了。" },
+"792": { en: "As a senior, Peter is writing his thesis.", cn: "作为大学四年级学生，彼得正在写毕业论文。" },
+"793": { en: "Mr. Green is a member of the faculty.", cn: "格林先生是大学教员。" },
+"794": { en: "In Britain, there are open universities.", cn: "在英国，有成人大学。" },
+"795": { en: "There are many training classes and night classes.", cn: "有许多培训班与夜校。" }
+},
+AboutJobs: {
+"796": { en: "What does your father do?", cn: "你父亲做什么工作？" },
+"797": { en: "He is a doctor. He has his own practice.", cn: "他是个医生，他自己开业。" },
+"798": { en: "Do you have any plans for your career?", cn: "你对未来有什么计划吗？" },
+"799": { en: "I want to be a pilot if possible.", cn: "如果可能的话，我想做个飞行员。" },
+"800": { en: "I hope that I can get a decent job with a good salary.", cn: "我希望有一份既体面，收入又高的工作。" },
+"801": { en: "I have an interview next week.", cn: "我下周要参加考试。" },
+"802": { en: "Tom has opened his own business while his classmates are still slogging away at school.", cn: "当汤姆的同学还在学校苦读时，他已经开始了自己的事业。" },
+"803": { en: "I like writing, but I wouldn't take it as my career.", cn: "我喜欢写作但不愿以此为职业。" },
+"804": { en: "I worked as an intern in that firm last summer.", cn: "去年夏天我在那家商行实习。" },
+"805": { en: "He's a very efficient young man though a little proud.", cn: "他是个很有能力的人，但是有点骄傲。" },
+"806": { en: "He made a successful career in business.", cn: "他的商务生涯十分成功。" },
+"807": { en: "My cousin has just been promoted to the rank of major.", cn: "我表兄刚被提升为少校。" },
+"808": { en: "He is a manager of a famous corporation.", cn: "他是一家著名公司的经理。" },"809": { en: "The statesman retired as the mayor of New York.", cn: "那位政治家退休时是纽约市市长。" },
+"810": { en: "He was appointed president of the committee recently.", cn: "他最近被任命为那个委员会的总裁。" }
+},
+FarmsAndFactories: {
+"811": { en: "This area is noted for its rich soil.", cn: "这个地区以土壤肥沃著称。" },
+"812": { en: "The place is too stony for farming.", cn: "这地方太多石块，不适合耕种。" },
+"813": { en: "In the flat country, people grow wheat and raise cattle.", cn: "在这平坦的乡间，人们种植小麦，饲养牲畜。" },
+"814": { en: "He has bought 10 tractors for the village.", cn: "他为村里买了10台拖拉机。" },
+"815": { en: "What's the typical farm product in this region?", cn: "这个地区典型的农产品是什么？" },
+"816": { en: "At this time of the year farmers begin to plow their fields.", cn: "每年这个时候，农民们开始犁地。" },
+"817": { en: "Have you milked the cows?", cn: "你已经挤过奶了吗？" },
+"818": { en: "Pile the hay in the corner.", cn: "把干草堆到边上。" },
+"819": { en: "What's the average yearly output of cars in your factory?", cn: "你们厂平均年产汽车多少台？" },
+"820": { en: "The meat packing industry is developing fast.", cn: "肉类加工业发展迅速。" },
+"821": { en: "Car manufacturers are having a bad time.", cn: "汽车制造商的日子不好过。" },
+"822": { en: "State-owned enterprises are getting out of difficulty.", cn: "国有企业开始走上坡路。" },
+"823": { en: "How many workshops are there in your factory?", cn: "你们厂有多少车间？" },
+"824": { en: "The computer industry is booming.", cn: "计算机业繁荣起来。" },
+"825": { en: "The information industry helps boost the global economy.", cn: "信息业推进全球经济发展。" }
+},
+AboutHobbies: {
+"826": { en: "Do you have any hobbies?", cn: "你有什么爱好吗？" },
+"827": { en: "What are you interested in?", cn: "你对什么比较感兴趣？" },
+"828": { en: "What are your interests?", cn: "你的爱好是什么？" },
+"829": { en: "What do you do in your spare time?", cn: "空闲时间你干什么？" },
+"830": { en: "How do you spend your evenings?", cn: "夜生活你都是怎么过的？" },
+"831": { en: "Lots of people like stamp collecting.", cn: "许多人喜欢集邮。" },
+"832": { en: "I am a Michael Jordan fan.", cn: "我是迈克尔·乔丹迷。" },
+"833": { en: "Does his film appeal to you?", cn: "你喜欢他的电影吗？" },
+"834": { en: "Do you go on picnics?", cn: "你常去郊游吗？" },
+"835": { en: "I particularly like English literature.", cn: "我对英国文学情有独钟。" },
+"836": { en: "What's so interesting about football? We girls don't like it.", cn: "足球有什么意思？我们女生不喜欢它。" },
+"837": { en: "She has a particular interest in painting.", cn: "她特别爱好绘画。" },
+"838": { en: "I often take my mind off my work by reading an interesting novel.", cn: "通常我通过阅读小说使我的注意力从工作上转移过来。" },
+"839": { en: "He plays violin just for enjoyment.", cn: "他拉小提琴只是为了自娱自乐。" },
+"840": { en: "Photography is an expensive hobby.", cn: "摄影是门花费很多的爱好。" }
+},
+RecreationalActivities: {
+"841": { en: "What's your favorite sport?", cn: "你最喜欢什么活动？" },
+"842": { en: "I like football.", cn: "我最喜欢足球。" },
+"843": { en: "What position do you play?", cn: "你踢什么位置？" },
+"844": { en: "I'm a catcher.", cn: "我是个接球员（垒球运动中）。" },
+"845": { en: "Our team beat their team yesterday.", cn: "昨天，我们队打败了他们队。" },
+"846": { en: "We are sure to defeat them.", cn: "我们一定会打败他们。" },
+"847": { en: "How many years have you been playing pingpong?", cn: "你打乒乓球多少年了？" },
+"848": { en: "My favorite winter sport is skiing.", cn: "我最喜欢的冬季运动是滑雪。" },
+"849": { en: "The basketball championship is exciting.", cn: "那次篮球冠军赛真激动人心。" },
+"850": { en: "I was on the track team 10 years ago.", cn: "十年前，我在田径队。" },
+"851": { en: "I prefer fishing to swimming.", cn: "比起游泳，我更喜欢钓鱼。" },
+"852": { en: "She is a member of the ski club.", cn: "她是滑雪俱乐部的成员。" },
+"853": { en: "The hardest thing to learn is to be a good loser.", cn: "最难学的一点是做一个输得起的人。" },
+"854": { en: "My class went camping last summer.", cn: "去年夏天我们班去露营了。" },
+"855": { en: "He's good at lifting weights.", cn: "他善于举重。" }
+},
+AboutNewspapersAndMagazines: {
+"856": { en: "I subscribed to a lot of periodicals last year.", cn: "去年我订了许多期刊。" },
+"857": { en: "Tom reads newspapers in the afternoon.", cn: "汤姆下午读报。" },
+"858": { en: "What kind of newspapers do you read?", cn: "你读什么样的报纸？" },
+"859": { en: "Newspapers and periodicals keep me updated on current affairs.", cn: "报纸和期刊让我了解时事。" },
+"860": { en: "What column do you like best?", cn: "你最喜欢哪个栏目？" },
+"861": { en: "Which do you like better, the news or the editorial?", cn: "新闻和评论你最喜欢看哪个？" },
+"862": { en: "Do you read advertisements too?", cn: "你也看广告吗？" },
+"863": { en: "I recommend to you Time and Newsweek. They are excellent.", cn: "我向你推荐《时代》和《新闻周刊》，它们很棒。" },
+"864": { en: "Fashion/Vogue is a very popular magazine in America.", cn: "《时尚》是美国很流行的杂志。" },
+"865": { en: "What's the circulation of this magazine?", cn: "这杂志发行量怎么样？" },
+"866": { en: "Why don't you put an advertisement in the paper to sell that old car?", cn: "为什么不在报上登广告卖旧车呢？" },
+"867": { en: "I once took a part-time job delivering the Evening Post.", cn: "我曾干过送晚报的兼职。" },
+"868": { en: "Have you read the article about the rescue of the hostage?", cn: "你看了关于营救人质的文章了吗？" },
+"869": { en: "There was a lot of news in the morning paper today.", cn: "今天的晨报上有许多新闻。" },
+"870": { en: "My friend Tom is areporter for the New York Times.", cn: "我朋友汤姆是《纽约时报》的记者。" }
+},
+RadioAndTV: {
+"871": { en: "What channel are you watching now?", cn: "现在你在看哪个频道？" },
+"872": { en: "There's TV coverage of the NBA tournament.", cn: "有个NBA联赛的电视报道。" },
+"873": { en: "Do you have a TV guide?", cn: "你有电视报吗？" },
+"874": { en: "You'll be on air in two minutes.", cn: "两分钟以后你会上电视。" },
+"875": { en: "Channel 5 is off the air now.", cn: "五频道已经停止播放。" },
+"876": { en: "Turn up your radio please.", cn: "请你把收音机开响一点儿。" },
+"877": { en: "We can't get good pictures on our TV set.", cn: "我们的电视机图象有问题。" },
+"878": { en: "Can this radio receive short-wave?", cn: "这个收音机能收短波吗？" },
+"879": { en: "If you install an outside antenna, you will have better reception.", cn: "如果你安装了室外天线，你的电视接受效果会好点。" },
+"880": { en: "Turn down the radio please.", cn: "请放低音量。" },
+"881": { en: "We'll have a soap opera series on TV this week.", cn: "这周末我们会在电视上看到一系列肥皂剧。" },
+"882": { en: "Please tune in next time.", cn: "请下次收听。" },
+"883": { en: "We're broadcasting from London.", cn: "我们从伦敦播放。" },
+"884": { en: "You can receive our program at short wave 37.5 MH.", cn: "你可在短波37.5赫兹上收到我们的节目。" },
+"885": { en: "There's too much static.", cn: "干扰太大。" }
+},
+AboutMusicAndLiterature: {
+"886": { en: "What's your favorite music?", cn: "你最喜欢什么音乐？" },
+"887": { en: "Do you often go to a concert?", cn: "你经常去听音乐会吗？" },
+"888": { en: "I hate Jazz. It's too noisy.", cn: "我讨厌爵士，太吵了。" },
+"889": { en: "Do you like pop music?", cn: "你喜欢流行音乐吗？" },
+"890": { en: "I have never heard the piece before, who wrote it?", cn: "我从没听过这首曲子，谁写的？" },
+"891": { en: "What do you think of their skill?", cn: "你觉得他们演奏技术如何？" },
+"892": { en: "I find classical concerts more to my liking than rock concerts.", cn: "我觉得古典音乐会比摇滚音乐会更合我胃口。" },
+"893": { en: "I've never read a more stirring story.", cn: "我从来没读过比这更令人激动的故事。" },
+"894": { en: "He has a passion for literature.", cn: "他很热衷于文学。" },
+"895": { en: "I am most attracted by Dickens.", cn: "狄更斯的作品更吸引我。" },
+"896": { en: "I never grow tired of novels though I read them everyday.", cn: "我每天看小说，但从没厌烦过。" },
+"897": { en: "On Sundays I often spend some time reading in the library.", cn: "星期天我经常在图书馆里看些书。" },
+"898": { en: "What do you think about this poem?", cn: "你觉得这首诗怎么样？" },
+"899": { en: "I like Shakespeare better than Milton.", cn: "与弥尔顿比起来，我更喜欢莎士比亚。" },
+"900": { en: "How much do you know about the works of George Eliot?", cn: "乔治·艾略特的作品你知道多少？" }
+},
+ConstructionAndIndustry: {
+"901": { en: "Take no risks. Safety first.", cn: "不要冒险，安全第一。" },
+"902": { en: "Hello, gentlemen. How is everything going?", cn: "先生们，你们好，一切都顺利吗？" },
+"903": { en: "I think so. Here are the monitor records.", cn: "挺好，请看这些监视纪录。" },
+"904": { en: "Today, we'll drill 18m deep holes.", cn: "今天，我们要打18米深的井。" },
+"905": { en: "The water truck was stranded.", cn: "水罐车误住了。" },
+"906": { en: "Let that rig tow it out.", cn: "叫那部钻机把它拖出来。" },
+"907": { en: "That bit is worn out, change it, please.", cn: "那个钻头磨损太厉害了，需要换个新的。" },
+"908": { en: "Dig the mud-pit larger, Xiao Li.", cn: "小李，把泥浆挖大点。" },
+"909": { en: "Clear the screen frequently, don't stop it up.", cn: "常刮连泵头，别让它堵住了。" },
+"910": { en: "That pipe thread is bad. Use another one instead.", cn: "那个钻杆的丝扣坏了，换另外一根。" },
+"911": { en: "Make joints quickly.", cn: "快点接钻杆。" },
+"912": { en: "My spade rod is broken. Give me a new one, please.", cn: "我的铁锹把断了，请给我一个新的。" },
+"913": { en: "Pass me a pipe wrench, please.", cn: "请把管钳递给我。" },
+"914": { en: "This portable rig can only drill 15m deep holes.", cn: "这台人抬钻机只能打15米深的井。" },
+"915": { en: "How long does it take to drill a hole?", cn: "打一口井要多长时间？" },
+"916": { en: "Let's move to the next point.", cn: "搬到下一个点。" },
+"917": { en: "Oh, there's a swivel leakage. Stop drilling, please.", cn: "哦，水龙头漏了，别打井了。" },
+"918": { en: "The hose is broken, let's change it for a new one.", cn: "高压管破了，换个新的。" },
+"919": { en: "This hydraulic switch is out of order.", cn: "这个液压开关失灵了。" },
+"920": { en: "Don't forget to tamp the hole well. Tamping is as important as the hole depth.", cn: "别忘了填井，填井和井深一样重要。" },
+"921": { en: "Let's stop here. Get in the car and go home.", cn: "就干到这吧，上车回家。" },
+"922": { en: "Add some coolant into the radiator, please.", cn: "请给水箱里加些冷却液。" },
+"923": { en: "Refuel my truck with diesel oil, please. I want light diesel oil No.0.", cn: "请给我加些柴油，我要零号轻柴油。" },
+"924": { en: "Give me 100 liters of gasoline (petrol), please. Motor gasoline No.85.", cn: "请给我加一百公升汽油，85号车用汽油。" },
+"925": { en: "Can I leave my truck here?", cn: "我可以把车停在这吗？" },
+"926": { en: "Where can I have my car washed?", cn: "在哪里可以洗车？" },
+"927": { en: "This truck's inner tube is broken. Help me to mend it, please.", cn: "这部车的内胎爆了，请帮我补一下好吗？" },
+"928": { en: "What food are we going to prepare for the crews today?", cn: "今天为施工队做什么饭？" },
+"929": { en: "Jiao zi, dumpling, bun and sandwich, salted eggs, sausages, soup and mineral water.", cn: "饺子，包子，馒头和三明治，咸鸡蛋，香肠，汤和矿泉水。" },
+"930": { en: "I want to buy some food and vegetables. Can you show me the nearest free market?", cn: "我要买些食品和蔬菜。你知道最近的自由市场在哪吗？" }
+}};
+
+
+function sort_english_list(english_list){
+    let l = Object.entries(english_list).sort((a, b) => {
+         Number(a[0]) - Number(b[0]); 
+    });
+    sorted_list = []
+    for (let i = 0; i < l.length; i++){
+        item = {
+            "title" : l[i][0],
+            "data" : l[i][1]
+        }
+        sorted_list.push(item);
+    }
+    return sorted_list;
+}
+
+function create_group_html(title, group) {
+    let group_html = `<div class="group">
+    <h2>${title}</h2>
+    <ul>`;
+    console.log(group);
+    for (let number in group) {
+        group_html += `<li>
+        <h3>${number}</h3>
+        <p class="p_en" >${group[number].en}</p>
+        <p class="p_cn" >${group[number].cn}</p>
+        </li>`;
+    }
+    group_html += `</ul>
+    </div>`;
+    return group_html;
+
+}
+
+let is_show_english = true;
+let is_show_chinese = true;
+
+function refresh_english() {
+    Array.from(document.getElementsByClassName("p_en")).forEach(function(item){
+      if (is_show_english) {
+        item.style.color = 'black';
+      } else {
+        item.style.color = 'white';
+      }
+  });
+}
+
+function refresh_chinese() {
+  Array.from(document.getElementsByClassName("p_cn")).forEach(function(item){
+    if (is_show_chinese) {
+      item.style.color = 'black';
+    } else {
+      item.style.color = 'white';
+    }
+          
+    });
+}
+
+document.getElementById("show_english").addEventListener("click", function(){
+  is_show_english = !is_show_english;
+  refresh_english();
+});
+
+document.getElementById("show_chinese").addEventListener("click", function(){
+  is_show_chinese = !is_show_chinese;
+  refresh_chinese();
+});
+
+sorted_english900 = sort_english_list(english900);
+// console.log(sorted_english900)
+// cycle sorted_english900
+
+let data_container = document.getElementById("data_container");
+let html = "";
+for (let i = 0; i < sorted_english900.length; i++) {
+    // console.log(sorted_english900[i]);
+    let group_html = create_group_html(sorted_english900[i].title, sorted_english900[i].data);
+    html += group_html;
+}
+data_container.innerHTML = html;
+
+refresh_english();
+refresh_chinese();
+
+Array.from(document.querySelectorAll(".p_en, .p_cn")).forEach(function(item){
+    item.addEventListener("click", function(){
+      if (item.style.color == 'black') {
+        item.style.color = 'white';
+      } else {
+        item.style.color = 'black';
+      }
+      
+    });
+});
+    </script>
+</body>
